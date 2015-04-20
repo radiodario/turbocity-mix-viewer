@@ -848,9 +848,6 @@ renderer.setSize(WIDTH, HEIGHT);
 container.appendChild(renderer.domElement);
 
 
-var gl = renderer.getContext();
-debugger;
-
 // camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
 // camera.position.set(0, 0, 1000);
