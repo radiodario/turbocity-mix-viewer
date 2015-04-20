@@ -847,9 +847,17 @@ renderer.setSize(WIDTH, HEIGHT);
 
 container.appendChild(renderer.domElement);
 
-camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+// camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
-camera.position.set(0, 0, 1000);
+// camera.position.set(0, 0, 1000);
+
+var aspect = window.innerWidth / window.innerHeight;
+var d = 200;
+camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, NEAR, FAR );
+
+camera.position.set( d, d, d ); // all components equal
+camera.lookAt( scene.position ); // or the origin
+
 
 var debugaxis = function(axisLength){
     //Shorten the vertex function
@@ -885,7 +893,7 @@ scene.add(camera);
 
 light = new THREE.DirectionalLight(0xffffff);
 
-light.position.set(0, 0, 1000);
+light.position.set(0, d, d);
 light.castShadow = true;
 light.shadowCameraLeft = -60;
 light.shadowCameraTop = -60;
@@ -902,15 +910,15 @@ scene.add(light);
 loader = new THREE.JSONLoader();
 var mesh;
 loader.load('data/turbocity.json', function (geometry, materials) {
-  var material = new THREE.MeshLambertMaterial( {
-    color: 0xffffff,
-    shading: THREE.FlatShading } )
+  // var material = new THREE.MeshLambertMaterial( {
+  //   color: 0xffffff,
+  //   shading: THREE.FlatShading } )
 
-  // var material = new THREE.ShaderMaterial( {
-  //   uniforms: uniforms,
-  //   vertexShader: document.getElementById( 'vertex-shader' ).textContent,
-  //   fragmentShader: document.getElementById( 'fragment-shader-3' ).textContent
-  //   } );
+  var material = new THREE.ShaderMaterial( {
+    uniforms: uniforms,
+    vertexShader: document.getElementById( 'vertex-shader' ).textContent,
+    fragmentShader: document.getElementById( 'fragment-shader-3' ).textContent
+    } );
 
 
   // var material = new THREE.MeshBasicMaterial({
@@ -945,7 +953,12 @@ function onWindowResize( event ) {
   uniforms.resolution.value.x = window.innerWidth;
   uniforms.resolution.value.y = window.innerHeight;
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  var aspect = window.innerWidth / window.innerHeight;
+  var d = 200;
+  camera.left = - d * aspect;
+  camera.right = d * aspect;
+
+  camera.aspect = aspect;
   camera.updateProjectionMatrix();
 
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -959,9 +972,8 @@ function render() {
   uniforms.time.value += delta * 5;
 
   var time = clock.getElapsedTime();
-  mesh.rotation.z = ((Math.PI/2) - Math.abs((time % Math.PI) - (Math.PI)));
-
-
+  // mesh.rotation.z -= .005;
+  mesh.rotation.z = ((Math.PI/4) - Math.abs(((time/2) % Math.PI) - (Math.PI)));
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
