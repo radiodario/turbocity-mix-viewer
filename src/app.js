@@ -129,7 +129,12 @@ function onWindowResize( event ) {
   uniforms.resolution.value.x = window.innerWidth;
   uniforms.resolution.value.y = window.innerHeight;
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  var aspect = window.innerWidth / window.innerHeight;
+  var d = 200;
+  camera.left = - d * aspect;
+  camera.right = d * aspect;
+
+  camera.aspect = aspect;
   camera.updateProjectionMatrix();
 
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -144,7 +149,7 @@ function render() {
 
   var time = clock.getElapsedTime();
   // mesh.rotation.z -= .005;
-  mesh.rotation.z = ((Math.PI/4) - Math.abs((time % Math.PI) - (Math.PI)));
+  mesh.rotation.z = ((Math.PI/4) - Math.abs(((time/2) % Math.PI) - (Math.PI)));
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
