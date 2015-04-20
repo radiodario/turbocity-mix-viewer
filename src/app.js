@@ -143,7 +143,8 @@ function render() {
   uniforms.time.value += delta * 5;
 
   var time = clock.getElapsedTime();
-  mesh.rotation.z -= .005;
+  // mesh.rotation.z -= .005;
+  mesh.rotation.z = ((Math.PI/4) - Math.abs((time % Math.PI) - (Math.PI)));
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
