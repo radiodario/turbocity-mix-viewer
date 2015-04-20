@@ -193,7 +193,7 @@ function render() {
 
   // uniforms.time.value += delta * 5;
 
-  var t = Date.now() * 0.002;
+  var t = Date.now() * 0.0005;
   var interval = 10;
   uniforms.time.value = t % interval / interval;
 
