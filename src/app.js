@@ -1,4 +1,7 @@
 var THREE = require('three.js');
+require('./ExplodeModifier')(THREE);
+require('./TessellateModifier')(THREE);
+
 
 var container, scene, renderer, camera, light, clock, loader;
 var WIDTH, HEIGHT, VIEW_ANGLE, ASPECT, NEAR, FAR;
@@ -55,6 +58,11 @@ var uniforms = {
   resolution: { type: "v2", value: new THREE.Vector2() }
 };
 
+var attributes = {
+  displacement: {type: 'v3',value: []},
+  customColor: {type: 'c',value: []}
+};
+
 window.camera = camera;
 
 scene.add(camera);
@@ -78,9 +86,9 @@ scene.add(light);
 loader = new THREE.JSONLoader();
 var mesh;
 loader.load('data/turbocity.json', function (geometry, materials) {
-  var material = new THREE.MeshLambertMaterial( {
-    color: 0xffffff,
-    shading: THREE.FlatShading } )
+  // var material = new THREE.MeshLambertMaterial( {
+  //   color: 0xffffff,
+  //   shading: THREE.FlatShading } );
 
   // var material = new THREE.ShaderMaterial( {
   //   uniforms: uniforms,
@@ -88,7 +96,57 @@ loader.load('data/turbocity.json', function (geometry, materials) {
   //   fragmentShader: document.getElementById( 'fragment-shader-3' ).textContent
   //   } );
 
+  var material = new THREE.ShaderMaterial( {
+    uniforms: uniforms,
+    attributes: attributes,
+    vertexShader: document.getElementById( 'vertex-shader-displacement' ).textContent,
+    fragmentShader: document.getElementById( 'fragment-shader-displacement' ).textContent,
+    shading:    THREE.FlatShading,
+    side:       THREE.DoubleSide
 
+    } );
+
+  geometry.computeBoundingBox();
+
+  var bb = geometry.boundingBox;
+  var i, n = 6, maxEdgeLength = 4;
+  var tessellator = new THREE.TessellateModifier(maxEdgeLength);
+  for (i = 0; i < n; i++)
+      tessellator.modify(geometry);
+  var exploder = new THREE.ExplodeModifier();
+  exploder.modify(geometry);
+  var vertices = geometry.vertices;
+  var colors = attributes.customColor.value;
+  var displacement = attributes.displacement.value;
+  var h, d, x, y, z;
+  var nv, v = 0;
+  var rand = function() {
+      return Math.random() - 0.5;
+  }
+  for (var f = 0; f < geometry.faces.length; f++) {
+      var face = geometry.faces[f];
+      if (face instanceof THREE.Face3) {
+          nv = 3;
+      } else {
+          nv = 4;
+      }
+      h = 0.15 * Math.random();
+      s = 0.7 * Math.random();
+      d = 10 * (0.5 - Math.random());
+      x = rand() * (bb.max.x - bb.min.x);
+      y = rand() * (bb.max.y - bb.min.y) * 4;
+      z = rand() * (bb.max.z - bb.min.z) * 10;
+      for (var i = 0; i < nv; i++) {
+          colors[v] = new THREE.Color();
+          displacement[v] = new THREE.Vector3();
+          colors[v].setHSL(h, s, 1);
+          colors[v].convertGammaToLinear();
+          displacement[v].set(x, y, z);
+          v += 1;
+      }
+  }
+
+  // debugger;
   // var material = new THREE.MeshBasicMaterial({
   //   color: 0xffffff,
   //   wireframe: true
@@ -112,6 +170,7 @@ loader.load('data/turbocity.json', function (geometry, materials) {
   window.addEventListener( 'resize', onWindowResize, false );
 
 
+
   render();
 });
 
@@ -130,13 +189,19 @@ function onWindowResize( event ) {
 
 
 function render() {
-  var delta = clock.getDelta();
+  // var delta = clock.getDelta();
 
-  uniforms.time.value += delta * 5;
+  // uniforms.time.value += delta * 5;
+
+  var t = Date.now() * 0.002;
+  var interval = 10;
+  uniforms.time.value = t % interval / interval;
+
+
 
   var time = clock.getElapsedTime();
-  mesh.rotation.z = ((Math.PI/2) - Math.abs((time % Math.PI) - (Math.PI)));
-
+  // mesh.rotation.z = ((Math.PI/2) - Math.abs((time % Math.PI) - (Math.PI)));
+  mesh.rotation.z -= 0.001;
 
 
   renderer.render(scene, camera);
