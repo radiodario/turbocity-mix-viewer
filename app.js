@@ -841,7 +841,12 @@ FAR = 10000;
 
 scene = new THREE.Scene();
 
-renderer = new THREE.WebGLRenderer({antialias: true});
+renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: true
+});
+
+renderer.setClearColor( 0xffffff, 1 );
 
 renderer.setSize(WIDTH, HEIGHT);
 
