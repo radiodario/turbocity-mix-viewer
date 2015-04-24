@@ -43,6 +43,10 @@ module.exports = function (canvas) {
 
     camDistance: 200,
 
+    lightX: 0,
+    lightY: 200,
+    lightZ: 200,
+
     init: function initialise(onCompleteCallback) {
       //;_;
       var self = this;
@@ -64,7 +68,7 @@ module.exports = function (canvas) {
 
       // setup the lights
       light = new THREE.DirectionalLight(0xffffff);
-      light.position.set(0, d, d);
+      self.updateLight();
       light.castShadow = true;
       light.shadowCameraLeft = -60;
       light.shadowCameraTop = -60;
@@ -163,6 +167,17 @@ module.exports = function (canvas) {
         document.body.classList.remove('animate');
       }
 
+    },
+
+    updateLight: function() {
+      light.position.set(this.lightX, this.lightY, this.lightZ);
+    },
+
+    resetLight: function() {
+      this.lightX = 0;
+      this.lightY = 200;
+      this.lightZ = 200;
+      this.updateLight();
     },
 
     drawAxes: function(axisLength){
