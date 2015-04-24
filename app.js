@@ -5272,6 +5272,12 @@ var setup = function() {
       logo.setBackground();
     });
 
+  var anim = gui.add(logo, "animate")
+    .name("BG animate")
+    .onChange(function(val) {
+      logo.setBackground();
+    });
+
   var m = gui.addColor(logo, "logoColour").name("FG Colour");
   m.onChange(function(val) {
     // logo.updateMaterial
@@ -5387,7 +5393,7 @@ module.exports = function (canvas) {
 
     backgroundColor: "#000000",
     backgroundImage: "none",
-
+    animate: false,
     material: "plain", // default
     logoColour: 0xffffff,
 
