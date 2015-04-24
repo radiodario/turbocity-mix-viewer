@@ -169,6 +169,11 @@ module.exports = function (canvas) {
 
     },
 
+    updateMaterialColour: function() {
+      var col = this.logoColour;
+      mesh.material.color = new THREE.Color(col);
+    },
+
     updateLight: function() {
       light.position.set(this.lightX, this.lightY, this.lightZ);
     },

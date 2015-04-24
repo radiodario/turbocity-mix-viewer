@@ -36,10 +36,11 @@ var setup = function() {
       logo.setBackground();
     });
 
-  var m = gui.addColor(logo, "logoColour").name("FG Colour");
-  m.onChange(function(val) {
-    // logo.updateMaterial
-  })
+  var m = gui.addColor(logo, "logoColour")
+    .name("FG Colour")
+    .onChange(function(val) {
+      logo.updateMaterialColour()
+    });
 
 
   var lightGui = gui.addFolder('Light');
