@@ -10,7 +10,7 @@
 
 
 <div class="viewport"></div>
-<script id="live-reload" src="http://localhost:35729/livereload.js"></script>
+<script id="live-reload" src="http://macintosh:35729/livereload.js"></script>
 <script id="vertex-shader" type="x-shader/x-vertex">
 
   varying vec2 vUv;
@@ -40,7 +40,6 @@
     gl_FragColor = vec4( red, green, blue, 1.0 );
 
   }
-
 </script>
 <script id="fragment-shader-2" type="x-shader/x-fragment">
 
@@ -62,34 +61,32 @@
     gl_FragColor = vec4( vec3( color, color * 0.5, sin( color + time / 3.0 ) * 0.75 ), 1.0 );
 
   }
-
 </script>
 <script id="fragment-shader-3" type="x-shader/x-fragment">
-
   uniform float time;
   uniform vec2 resolution;
 
   varying vec2 vUv;
+  #extension GL_OES_standard_derivatives : enable
 
   void main( void ) {
     float t = time;
 
-    vec2 uv = vUv;
+    vec2 uv = vUv; // -1.0 + 2.0 *vUv;
 
     uv.y *= 0.2;
     uv *= mat2(.4,.3,-.3,.4)*10.;
 
 
-    float z=exp(-uv.y*uv.y*(2000.+1000.*cos(t*0.074+0.36)))*((2.+sin(t*0.035))*0.2)+0.8*cos(uv.y*11.0);
-    uv.x += 0.7*sin(z+t*0.2)*0.3;
-    float d=sin(uv.x*120.)+0.3;
-    float aa=fwidth(d);
-    float c=smoothstep(-aa,aa,d);
+    float z = exp(-uv.y*uv.y*(2000.+1000.*cos(t*0.074+0.36)))*((2.+sin(t*0.035))*0.2)+0.8*cos(uv.y*11.0);
+    uv.x += 0.7 * sin(z+t*0.2)*0.3;
+    float d = sin(uv.x*120.)+0.3;
+    float aa = fwidth(d);
+    float c = smoothstep(-aa,aa,d);
 
     gl_FragColor = vec4(c,c,c,1.0);
 
   }
-
 </script>
 <script id="fragment-shader-4" type="x-shader/x-fragment">
 
