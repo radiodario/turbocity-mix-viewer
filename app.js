@@ -5250,6 +5250,8 @@ var logo = require('./spinning-logo')(container);
 
 var dat = require('dat-gui');
 
+var materials = require('./materials');
+
 function render() {
   logo.render();
   requestAnimationFrame(render);
@@ -5280,11 +5282,24 @@ var setup = function() {
       logo.setBackground();
     });
 
-  var m = gui.addColor(logo, "logoColour")
+  var fgGui = gui.addFolder('Foreground');
+  var mc = fgGui.addColor(logo, "logoColour")
     .name("FG Colour")
     .onChange(function(val) {
-      logo.updateMaterialColour()
+      logo.updateMaterialColour();
     });
+
+  var wf = fgGui.add(logo, "wireframe")
+    .name("Wireframe")
+    .onChange(function(val) {
+      logo.updateMaterialWireframe();
+    })
+
+  var mg = fgGui.add(logo, "material", Object.keys(materials))
+    .name("Shading")
+    .onChange(function(val) {
+      logo.updateMaterial();
+    })
 
 
   var lightGui = gui.addFolder('Light');
@@ -5331,14 +5346,26 @@ setup();
 
 
 
-},{"./../bower_components/three.js/three.min.js":1,"./spinning-logo":7,"dat-gui":2}],6:[function(require,module,exports){
+},{"./../bower_components/three.js/three.min.js":1,"./materials":6,"./spinning-logo":7,"dat-gui":2}],6:[function(require,module,exports){
 var THREE = require("./../bower_components/three.js/three.min.js")
 
 
 
 module.exports = {
 
-  plain : function (colour) {
+  basic: function (uniforms, colour) {
+
+    if (!colour) {
+      colour = 0xffffff;
+    }
+
+    return new THREE.MeshBasicMaterial({
+      color: colour
+    });
+
+  },
+
+  lambert : function (uniforms, colour) {
 
     if (!colour) {
       colour = 0xffffff;
@@ -5348,19 +5375,6 @@ module.exports = {
       color: colour,
       shading: THREE.FlatShading
     });
-  },
-
-  wireframe: function (colour) {
-
-    if (!colour) {
-      colour = 0xffffff;
-    }
-
-    return new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true
-    });
-
   },
 
   colourBlender : function(uniforms) {
@@ -5432,8 +5446,9 @@ module.exports = function (canvas) {
     backgroundColor: "#000000",
     backgroundImage: "none",
     animate: false,
-    material: "plain", // default
+    material: 'lambert', // default
     logoColour: 0xffffff,
+    wireframe: false,
 
     camDistance: 200,
 
@@ -5499,12 +5514,6 @@ module.exports = function (canvas) {
 
       });
 
-    },
-
-    getMaterial: function() {
-      var fn = materials[this.material];
-      console.log(this.logoColour);
-      return fn(this.logoColour);
     },
 
     onWindowResize: function resize() {
@@ -5575,9 +5584,23 @@ module.exports = function (canvas) {
       this.updateCamera();
     },
 
+    getMaterial: function() {
+      var matFn = materials[this.material];
+      return matFn(uniforms, this.logoColour);
+    },
+
+    updateMaterial: function() {
+      var mat = this.getMaterial();
+      mesh.material = mat;
+    },
+
     updateMaterialColour: function() {
       var col = this.logoColour;
       mesh.material.color = new THREE.Color(col);
+    },
+
+    updateMaterialWireframe: function() {
+      mesh.material.wireframe = this.wireframe
     },
 
     updateLight: function() {
