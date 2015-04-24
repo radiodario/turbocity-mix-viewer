@@ -64,7 +64,7 @@ module.exports = function (canvas) {
 
       // setup the lights
       light = new THREE.DirectionalLight(0xffffff);
-      light.position.set(0, d, d);
+      light.position.set(d, d, d);
       light.castShadow = true;
       light.shadowCameraLeft = -60;
       light.shadowCameraTop = -60;
