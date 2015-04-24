@@ -5260,19 +5260,21 @@ var setup = function() {
 
   var gui = new dat.GUI();
 
-  var bgCol = gui.addColor(logo, "backgroundColor")
+  var bgGui = gui.addFolder('Background');
+
+  var bgCol = bgGui.addColor(logo, "backgroundColor")
     .name("BG Colour")
     .onChange(function(val) {
       logo.setBackground();
     });
 
-  var bgImg = gui.add(logo, "backgroundImage")
+  var bgImg = bgGui.add(logo, "backgroundImage")
     .name("BG Image url")
     .onChange(function(val) {
       logo.setBackground();
     });
 
-  var anim = gui.add(logo, "animate")
+  var anim = bgGui.add(logo, "animate")
     .name("BG animate")
     .onChange(function(val) {
       logo.setBackground();
@@ -5282,6 +5284,30 @@ var setup = function() {
   m.onChange(function(val) {
     // logo.updateMaterial
   })
+
+
+  var lightGui = gui.addFolder('Light');
+  var lX = lightGui.add(logo, 'lightX', -200, 200)
+    .name("Light X")
+    .listen()
+    .onChange(function(val) {
+      logo.updateLight();
+    });
+  var lY = lightGui.add(logo, 'lightY', -200, 200)
+    .name("Light Y")
+    .listen()
+    .onChange(function(val) {
+      logo.updateLight();
+    });
+  var lZ = lightGui.add(logo, 'lightZ', -200, 200)
+    .name("Light Z")
+    .listen()
+    .onChange(function(val) {
+      logo.updateLight();
+    });
+  var lightDef = lightGui.add(logo, 'resetLight')
+    .name("Reset");
+
 
   // initialise and render once you're done boy;
   logo.init(render);
@@ -5399,6 +5425,10 @@ module.exports = function (canvas) {
 
     camDistance: 200,
 
+    lightX: 0,
+    lightY: 200,
+    lightZ: 200,
+
     init: function initialise(onCompleteCallback) {
       //;_;
       var self = this;
@@ -5420,7 +5450,7 @@ module.exports = function (canvas) {
 
       // setup the lights
       light = new THREE.DirectionalLight(0xffffff);
-      light.position.set(0, d, d);
+      self.updateLight();
       light.castShadow = true;
       light.shadowCameraLeft = -60;
       light.shadowCameraTop = -60;
@@ -5519,6 +5549,17 @@ module.exports = function (canvas) {
         document.body.classList.remove('animate');
       }
 
+    },
+
+    updateLight: function() {
+      light.position.set(this.lightX, this.lightY, this.lightZ);
+    },
+
+    resetLight: function() {
+      this.lightX = 0;
+      this.lightY = 200;
+      this.lightZ = 200;
+      this.updateLight();
     },
 
     drawAxes: function(axisLength){
