@@ -38,8 +38,9 @@ module.exports = function (canvas) {
     backgroundColor: "#000000",
     backgroundImage: "none",
     animate: false,
-    material: "plain", // default
+    material: 'lambert', // default
     logoColour: 0xffffff,
+    wireframe: false,
 
     camDistance: 200,
 
@@ -105,12 +106,6 @@ module.exports = function (canvas) {
 
       });
 
-    },
-
-    getMaterial: function() {
-      var fn = materials[this.material];
-      console.log(this.logoColour);
-      return fn(this.logoColour);
     },
 
     onWindowResize: function resize() {
@@ -181,9 +176,23 @@ module.exports = function (canvas) {
       this.updateCamera();
     },
 
+    getMaterial: function() {
+      var matFn = materials[this.material];
+      return matFn(uniforms, this.logoColour);
+    },
+
+    updateMaterial: function() {
+      var mat = this.getMaterial();
+      mesh.material = mat;
+    },
+
     updateMaterialColour: function() {
       var col = this.logoColour;
       mesh.material.color = new THREE.Color(col);
+    },
+
+    updateMaterialWireframe: function() {
+      mesh.material.wireframe = this.wireframe
     },
 
     updateLight: function() {

@@ -4,7 +4,19 @@ var THREE = require('three.js')
 
 module.exports = {
 
-  plain : function (colour) {
+  basic: function (uniforms, colour) {
+
+    if (!colour) {
+      colour = 0xffffff;
+    }
+
+    return new THREE.MeshBasicMaterial({
+      color: colour
+    });
+
+  },
+
+  lambert : function (uniforms, colour) {
 
     if (!colour) {
       colour = 0xffffff;
@@ -14,19 +26,6 @@ module.exports = {
       color: colour,
       shading: THREE.FlatShading
     });
-  },
-
-  wireframe: function (colour) {
-
-    if (!colour) {
-      colour = 0xffffff;
-    }
-
-    return new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true
-    });
-
   },
 
   colourBlender : function(uniforms) {

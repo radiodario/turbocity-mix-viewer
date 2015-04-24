@@ -6,6 +6,8 @@ var logo = require('./spinning-logo')(container);
 
 var dat = require('dat-gui');
 
+var materials = require('./materials');
+
 function render() {
   logo.render();
   requestAnimationFrame(render);
@@ -36,11 +38,24 @@ var setup = function() {
       logo.setBackground();
     });
 
-  var m = gui.addColor(logo, "logoColour")
+  var fgGui = gui.addFolder('Foreground');
+  var mc = fgGui.addColor(logo, "logoColour")
     .name("FG Colour")
     .onChange(function(val) {
-      logo.updateMaterialColour()
+      logo.updateMaterialColour();
     });
+
+  var wf = fgGui.add(logo, "wireframe")
+    .name("Wireframe")
+    .onChange(function(val) {
+      logo.updateMaterialWireframe();
+    })
+
+  var mg = fgGui.add(logo, "material", Object.keys(materials))
+    .name("Shading")
+    .onChange(function(val) {
+      logo.updateMaterial();
+    })
 
 
   var lightGui = gui.addFolder('Light');
