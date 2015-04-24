@@ -26,6 +26,8 @@ module.exports = function (canvas) {
 
   var scene = new THREE.Scene();
 
+  var loader = new THREE.TextureLoader();
+
   var renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -36,7 +38,8 @@ module.exports = function (canvas) {
   return {
 
     backgroundColor: "#000000",
-    backgroundImage: "none",
+    backgroundImage: "",
+    fgTexture: "",
     animate: false,
     material: 'lambert', // default
     logoColour: 0xffffff,
@@ -195,6 +198,14 @@ module.exports = function (canvas) {
 
     updateMaterialWireframe: function() {
       mesh.material.wireframe = this.wireframe
+    },
+
+    updateMaterialTexture: function() {
+      if (this.fgTexture) {
+        loader.load(this.fgTexture, function(texture) {
+          mesh.material.map = texture;
+        });
+      }
     },
 
     updateLight: function() {

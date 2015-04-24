@@ -45,17 +45,23 @@ var setup = function() {
       logo.updateMaterialColour();
     });
 
+  var fgText = fgGui.add(logo, 'fgTexture')
+    .name ("Texture URL")
+    .onChange(function(val) {
+      logo.updateMaterialTexture();
+    });
+
   var wf = fgGui.add(logo, "wireframe")
     .name("Wireframe")
     .onChange(function(val) {
       logo.updateMaterialWireframe();
-    })
+    });
 
   var mg = fgGui.add(logo, "material", Object.keys(materials))
     .name("Shading")
     .onChange(function(val) {
       logo.updateMaterial();
-    })
+    });
 
 
   var lightGui = gui.addFolder('Light');
