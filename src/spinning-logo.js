@@ -184,6 +184,8 @@ module.exports = function (canvas) {
     updateMaterial: function() {
       var mat = this.getMaterial();
       mesh.material = mat;
+      this.updateMaterialColour();
+      this.updateMaterialWireframe();
     },
 
     updateMaterialColour: function() {
