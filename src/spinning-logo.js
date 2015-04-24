@@ -37,7 +37,7 @@ module.exports = function (canvas) {
 
     backgroundColor: "#000000",
     backgroundImage: "none",
-
+    animate: false,
     material: "plain", // default
     logoColour: 0xffffff,
 
