@@ -1,11 +1,14 @@
 var THREE = require('three.js');
 
+var fullscreen = require('fullscreen');
 
 var materials = require('./materials');
 
 module.exports = function (canvas) {
 
   var container = canvas;
+
+  var fs = fullscreen(document.body);
 
   // these are used for the shaded materials;
   var uniforms = {
@@ -205,6 +208,16 @@ module.exports = function (canvas) {
         loader.load(this.fgTexture, function(texture) {
           mesh.material.map = texture;
         });
+      }
+    },
+
+    goFullScreen: function() {
+      if (fs.isFullscreen) {
+        fs.isFullscreen = false;
+        fs.release();
+      } else {
+        fs.isFullscreen = true;
+        fs.request();
       }
     },
 

@@ -1,5 +1,6 @@
 var THREE = require('three.js');
 
+
 var container = document.querySelector('.viewport');
 
 var logo = require('./spinning-logo')(container);
@@ -97,6 +98,8 @@ var setup = function() {
 
   camGui.add(logo, 'resetCamera')
     .name("Reset");
+
+  gui.add(logo, 'goFullScreen').name('Full Screen');
 
   // initialise and render once you're done boy;
   logo.init(render);
