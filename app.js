@@ -846,7 +846,7 @@ renderer = new THREE.WebGLRenderer({
   alpha: true
 });
 
-renderer.setClearColor( 0xffffff, 1 );
+renderer.setClearColor(0x000000, 0);
 
 renderer.setSize(WIDTH, HEIGHT);
 
@@ -923,7 +923,7 @@ loader.load('data/turbocity.json', function (geometry, materials) {
   var material = new THREE.ShaderMaterial( {
     uniforms: uniforms,
     vertexShader: document.getElementById( 'vertex-shader' ).textContent,
-    fragmentShader: document.getElementById( 'fragment-shader-3' ).textContent
+    fragmentShader: document.getElementById( 'fragment-shader-1' ).textContent
     } );
 
 
