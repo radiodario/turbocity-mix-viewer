@@ -16,10 +16,23 @@ var setup = function() {
 
   var gui = new dat.GUI();
 
-  var c = gui.addColor(logo, "backgroundColor").name("BG Colour");
-  c.onChange(function(val) {
-    logo.setBackground();
-  });
+  var bgCol = gui.addColor(logo, "backgroundColor")
+    .name("BG Colour")
+    .onChange(function(val) {
+      logo.setBackground();
+    });
+
+  var bgImg = gui.add(logo, "backgroundImage")
+    .name("BG Image url")
+    .onChange(function(val) {
+      logo.setBackground();
+    });
+
+  var m = gui.addColor(logo, "logoColour").name("FG Colour");
+  m.onChange(function(val) {
+    // logo.updateMaterial
+  })
+
   // initialise and render once you're done boy;
   logo.init(render);
 
