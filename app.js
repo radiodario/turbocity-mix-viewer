@@ -5280,10 +5280,11 @@ var setup = function() {
       logo.setBackground();
     });
 
-  var m = gui.addColor(logo, "logoColour").name("FG Colour");
-  m.onChange(function(val) {
-    // logo.updateMaterial
-  })
+  var m = gui.addColor(logo, "logoColour")
+    .name("FG Colour")
+    .onChange(function(val) {
+      logo.updateMaterialColour()
+    });
 
 
   var lightGui = gui.addFolder('Light');
@@ -5549,6 +5550,11 @@ module.exports = function (canvas) {
         document.body.classList.remove('animate');
       }
 
+    },
+
+    updateMaterialColour: function() {
+      var col = this.logoColour;
+      mesh.material.color = new THREE.Color(col);
     },
 
     updateLight: function() {
