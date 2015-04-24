@@ -62,8 +62,7 @@ module.exports = function (canvas) {
       // setup the camera
       var d = this.camDistance;
       camera = new THREE.OrthographicCamera(-d * ASPECT, d * ASPECT, d, -d, NEAR, FAR);
-      camera.position.set(d, d, d);
-      camera.lookAt(scene.position);
+      this.updateCamera();
       scene.add(camera);
 
       // setup the lights
@@ -124,11 +123,7 @@ module.exports = function (canvas) {
       uniforms.resolution.value.x = WIDTH;
       uniforms.resolution.value.y = HEIGHT;
 
-      var d = this.camDistance;
-      camera.left = - d * ASPECT;
-      camera.right = d * ASPECT;
-      camera.aspect = ASPECT;
-      camera.updateProjectionMatrix();
+      this.updateCamera();
 
       renderer.setSize( WIDTH, HEIGHT );
     },
@@ -167,6 +162,23 @@ module.exports = function (canvas) {
         document.body.classList.remove('animate');
       }
 
+    },
+
+    updateCamera: function() {
+      var d = this.camDistance;
+      camera.position.set(d, d, d);
+      camera.lookAt(scene.position);
+      camera.left = - d * ASPECT;
+      camera.right = d * ASPECT;
+      camera.top = d;
+      camera.bottom = -d;
+      camera.aspect = ASPECT;
+      camera.updateProjectionMatrix();
+    },
+
+    resetCamera: function() {
+      this.camDistance = 200;
+      this.updateCamera();
     },
 
     updateMaterialColour: function() {

@@ -66,6 +66,17 @@ var setup = function() {
     .name("Reset");
 
 
+  var camGui = gui.addFolder('Camera');
+
+  camGui.add(logo, 'camDistance', 0, 1000)
+    .name("Zoom")
+    .onChange(function(val) {
+      logo.updateCamera();
+    });
+
+  camGui.add(logo, 'resetCamera')
+    .name("Reset");
+
   // initialise and render once you're done boy;
   logo.init(render);
 
